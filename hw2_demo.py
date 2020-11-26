@@ -6,7 +6,7 @@ Created on Sun Nov 22 14:25:14 2020
 """
 
 import os, json, cv2, random, wget
-
+import matplotlib.pyplot as plt
 # import some common detectron2 utilities
 import detectron2
 from detectron2.utils.logger import setup_logger
@@ -40,7 +40,9 @@ v = Visualizer(im[:, :, ::-1],
                MetadataCatalog.get(cfg.DATASETS.TRAIN[0]), scale=1.2)
 out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
 
-cv2.imshow("test", im)
-cv2.imshow('res', out.get_image()[:, :, ::-1])
-cv2.waitKey()
-cv2.destroyAllWindows()
+plt.title('origin image')
+plt.imshow(im[:, :, ::-1])
+plt.show()
+plt.title('output image')
+plt.imshow(out.get_image()[:, :, ::-1])
+plt.show()

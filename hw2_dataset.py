@@ -38,7 +38,6 @@ def get_dicts(img_dir):
     dataset_dicts = []
 
     for i in range(h5_file['/digitStruct/name'].shape[0]):
-    # for i in range(100):
         img_name = get_name(i, h5_file)
         img_bbox = get_bbox(i, h5_file)
 
@@ -77,6 +76,9 @@ dataset = get_dicts(img_dir)
 with open('HW2_train.json', 'w') as file_out:
     json.dump(dataset, file_out)
 
+# In[]
+# this cell can try whether dataset is successful registered
+
 # with open('HW2_train.json', 'r') as file_read:
 #     data_in = json.load(file_read)
 
@@ -84,7 +86,6 @@ with open('HW2_train.json', 'w') as file_out:
 # MetadataCatalog.get('trainset').set(thing_classes=['0', '1', '2', '3', '4',
 #                                                    '5', '6', '7', '8', '9'])
 # train_metadata = MetadataCatalog.get('trainset')
-
 
 # for d in random.sample(dataset, 3):
 #     img = cv2.imread(d["file_name"])

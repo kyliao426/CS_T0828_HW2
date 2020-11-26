@@ -5,7 +5,7 @@ Created on Sun Nov 22 21:10:37 2020
 @author: kuanyu
 """
 
-
+# In[]
 import os
 import cv2
 import json
@@ -39,8 +39,8 @@ MetadataCatalog.get('trainset').set(thing_classes=['0', '1', '2', '3', '4',
 train_metadata = MetadataCatalog.get('trainset')
 dataset = get_digits_dicts(dataset)
 
-
-# ============ train ===========
+# In[]
+# ========== train ==========
 cfg = get_cfg()
 cfg.merge_from_file("configs/COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml")
 cfg.DATASETS.TRAIN = ("trainset",)
@@ -58,17 +58,19 @@ trainer = DefaultTrainer(cfg)
 trainer.resume_or_load(resume=False)
 trainer.train()
 
-# ============ test ===========
+# In[]
+# ========== test ==========
+cfg = get_cfg()
 cfg.merge_from_file("configs/COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml")
-cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
-cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.75
+cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final_faster_rcnn.pth")
+cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 10
 cfg.DATASETS.TEST = ("trainset", )
 predictor = DefaultPredictor(cfg)
 
 result_list = []
 test_path = 'HW2dataset\\test'
-res_path = 'test_result'
+res_path = 'test_result_retinanet'
 for file in sorted(os.listdir(test_path), key=lambda x: int(x[: -4])):
     file_path = os.path.join(test_path, file)
     im = cv2.imread(file_path)
@@ -80,9 +82,6 @@ for file in sorted(os.listdir(test_path), key=lambda x: int(x[: -4])):
                    )
     v = v.draw_instance_predictions(outputs["instances"].to("cpu"))
     res_file = os.path.join(res_path, file)
-    # cv2.imshow('test', v.get_image()[:, :, ::-1])
-    # cv2.waitKey()
-    # cv2.destroyAllWindows()
     cv2.imwrite(res_file, v.get_image()[:, :, ::-1])
 
     row = {}  # a dictionary for one test image
@@ -102,5 +101,5 @@ for file in sorted(os.listdir(test_path), key=lambda x: int(x[: -4])):
     row['label'] = anno['pred_classes'].tolist()
     result_list.append(row)
 
-with open('309551107_075.json', 'w') as output:
+with open('309551107_6.json', 'w') as output:
     json.dump(result_list, output)
